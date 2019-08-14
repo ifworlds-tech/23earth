@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "UploadSnapshot": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "string"
+                },
+                "regions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/RegionInfo"
+                    }
+                }
+            },
+            "required": [
+                "title",
+                "author",
+                "regions"
+            ],
+            "additionalProperties": false
+        },
+        "RegionInfo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "parts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "description",
+                "color",
+                "parts"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "$ref": "#/definitions/UploadSnapshot"
+}

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  api:
+    image: node
+    ports:
+    - "3003:3001"
+    volumes:
+    - .:/app
+    command: '/app/ci/docker-run-api.sh'
+  build:
+    image: node
+    volumes:
+    - .:/app
+    command: '/app/ci/docker-build.sh'
+volumes:
+  logvolume01: {}
