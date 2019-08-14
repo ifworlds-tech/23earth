@@ -3,7 +3,7 @@ services:
   api:
     image: node
     ports:
-    - "3003:3001"
+    - "3005:3001"
     volumes:
     - .:/app
     command: '/app/ci/docker-run-api.sh'
