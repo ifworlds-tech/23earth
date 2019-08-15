@@ -9,6 +9,8 @@ interface BackgroundProps {
     borderVisible?: boolean
 }
 
+const BorderWidth = 0.5
+
 export class Background extends Component<BackgroundProps>{
     shouldComponentUpdate(){
         return false;
@@ -23,7 +25,7 @@ export class Background extends Component<BackgroundProps>{
                     fill="black"
                     transform={transform || undefined}
                     stroke="white"
-                    strokeWidth={this.props.borderVisible ? 0.5 : 0}
+                    strokeWidth={this.props.borderVisible ? BorderWidth : 0}
                     onClick={() => mapStatus.addPart(id)}
                     onMouseOver={evt => {
                         if(evt.buttons > 0 && toolsStatus.paintMode === 'swipe'){
@@ -61,7 +63,7 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             fill={reg.color}
                             stroke="white"
                             transform={part.transform || undefined}
-                            strokeWidth={borderVisible ? 0.5 : 0}
+                            strokeWidth={borderVisible ? BorderWidth : 0}
                             onClick={() => onClick && onClick(part.id, reg.id)}
                             onMouseOver={evt => onMouseOver && evt.buttons>0 && onMouseOver(part.id, reg.id)}
                         />

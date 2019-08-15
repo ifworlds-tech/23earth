@@ -26,6 +26,7 @@ export default observer(() => (
             height="100%" 
             viewBox={transformStatus.viewBox}>
             <MapContent
+                borderVisible
                 background={mapStatus.mapData.parts}
                 generation={mapStatus.snapshotGeneration}
                 regions={mapStatus.regions}
