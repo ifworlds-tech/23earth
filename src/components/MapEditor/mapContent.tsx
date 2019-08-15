@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { MapDataPart } from '../../types/map';
-import { mapStatus } from './store';
+import { mapStatus, toolsStatus } from './store';
 import { RegionInfo } from '../../types/region';
 
 
@@ -14,8 +14,22 @@ export class Background extends Component<BackgroundProps>{
     }
     render(){
         return (<g>
-            {this.props.background.map(({id, path}) => (
-                <path d={path} key={id} id={id} fill="black" stroke="white" strokeWidth={0.5} onClick={() => mapStatus.addPart(id)}/>
+            {this.props.background.map(({id, path, transform}) => (
+                <path 
+                    d={path}
+                    key={id}
+                    id={id}
+                    fill="black"
+                    transform={transform || undefined}
+                    stroke="white"
+                    strokeWidth={0.5}
+                    onClick={() => mapStatus.addPart(id)}
+                    onMouseOver={evt => {
+                        if(evt.buttons > 0 && toolsStatus.paintMode === 'swipe'){
+                            mapStatus.addPart(id)
+                        }
+                    }}
+                    />
             ))}
         </g>)
     }
@@ -26,7 +40,7 @@ interface RegionLayerProps {
     generation: number
     getPartById: (id: string) => MapDataPart
     onClick?: (partId: string, regionId: string) => void
-    onMouseOver?: (partId: string, regionId: string) => void
+    onMouseOver?: (partId: string, regionId: string, evt: React.MouseEvent<SVGPathElement, MouseEvent>) => void
 }
 
 export class RegionLayer extends Component<RegionLayerProps> {
@@ -44,9 +58,10 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             d={part.path}
                             fill={reg.color}
                             stroke="white"
+                            transform={part.transform || undefined}
                             strokeWidth={1}
                             onClick={() => onClick && onClick(part.id, reg.id)}
-                            onMouseOver={() => onMouseOver && onMouseOver(part.id, reg.id)}
+                            onMouseOver={evt => onMouseOver && onMouseOver(part.id, reg.id, evt)}
                         />
                     ))}
                 </g>

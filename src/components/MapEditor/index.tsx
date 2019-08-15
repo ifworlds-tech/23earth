@@ -5,6 +5,7 @@ import MapBoard from './MapBoard'
 import { initializeMap } from './actions/init';
 import Panel from './Panel';
 import MapNavigator from './MapNavigator';
+import PaintTools from './PaintTools';
 
 const MapEditor = observer(() => (
     mapStatus.loaded ?
@@ -12,6 +13,7 @@ const MapEditor = observer(() => (
         <MapBoard/>
         <Panel/>
         <MapNavigator/>
+        <PaintTools/>
     </div>) : (
         <h1>Loading...</h1>
     )

@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { observer } from 'mobx-react';
-import { mapStatus, transformStatus } from './store';
+import { mapStatus, transformStatus, toolsStatus } from './store';
 import { MapContent } from './mapContent';
 import { Modal } from 'antd';
 
@@ -36,7 +36,19 @@ export default observer(() => (
                         })
                     }
                 }}
-                onMouseOver={() => {}}
+                onMouseOver={(partId, regionId, evt) => {
+                    // if(evt.buttons > 0 && toolsStatus.paintMode === 'swipe'){
+                    //     if(regionId === mapStatus.currentRegionId){
+                    //         mapStatus.deletePart(partId, regionId)
+                    //     }else{
+                    //         Modal.confirm({
+                    //             title: "正在编辑其他地区",
+                    //             content: "是否切换到该地区?",
+                    //             onOk: () => mapStatus.setCurrentRegionById(regionId)
+                    //         })
+                    //     }
+                    // }
+                }}
             />
         </svg>
     </div>

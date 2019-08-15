@@ -1,6 +1,7 @@
 export interface MapDataPart {
     id: string
     path: string
+    transform: null | string
 }
 
 export interface MapData {

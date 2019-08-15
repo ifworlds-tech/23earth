@@ -359,14 +359,20 @@ class OnlineListStatus {
     }
 }
 
+export type PaintToolMode = "click" | "swipe"
 
 class ToolsStatus {
     @observable panelVisible = false
+    @observable paintMode: PaintToolMode = 'click'
     @action showPanel(){
         this.panelVisible = true
     }
     @action hidePanel(){
         this.panelVisible = false
+    }
+
+    @action setPaintMode(paintMode: PaintToolMode){
+        this.paintMode = paintMode
     }
 }
 
