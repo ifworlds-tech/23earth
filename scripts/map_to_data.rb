@@ -5,7 +5,7 @@ $input_image = 'input.svg'
 $output_image = 'output.svg'
 
 $ocean_selector = 'path#ocean'
-$land_selector = '//xmlns:path[@id!="ocean" and not(ancestor-or-self::*[contains(@class, "landxx")])]'
+$land_selector = '//xmlns:path[@id!="ocean" and (not(@class) or not(contains(@class, "landxx") or contains(@class, "coastxx"))  )]'
 
 $full_width = 7498.9
 $full_height = 4238.2
@@ -72,7 +72,7 @@ d_list = doc.xpath($land_selector).map{|node|
         #     raise mode
         # end
     }
-    [node[:id], merge_path(d)]
+    [node[:id], [merge_path(d), node[:transform]]]
 }.to_h
 
 File.write $output_image, %Q{
@@ -82,7 +82,7 @@ File.write $output_image, %Q{
         width="#{$full_width}"
         height="#{$full_height}"
         viewBox="0 0 #{$full_width} #{$full_height}"
-    >#{d_list.values.map{|d| %Q{<path fill="black" d="#{ d }"/>}}.join("\n")}</svg>
+    >#{d_list.values.map{|d| %Q{<path fill="black" d="#{ d[0] }" transform="#{d[1]}"/>}}.join("\n")}</svg>
 }
 
-File.write 'data.json', {"width": $full_width, "height": $full_height, "parts": d_list.map{|id, d| {:id => id, :path => d}}}.to_json
+File.write 'data.json', {"width": $full_width, "height": $full_height, "parts": d_list.map{|id, d| {:id => id, :path => d[0], :transform=>d[1]}}}.to_json
