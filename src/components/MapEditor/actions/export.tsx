@@ -61,6 +61,5 @@ export async function exportCurrentMapAsPng(height: number){
     document.body.appendChild(ele)
     const data = await domToImg.toPng(ele)
     ele.remove()
-    console.log(data)
     downloadDataUrl(data, `23earth_${moment().format("YYYY-MM-DD_hh:mm:ss")}.png`)
 }
