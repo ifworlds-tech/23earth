@@ -16,10 +16,15 @@ const containerStyle: CSSProperties = {
 }
 
 
-
 export default observer(() => (
-    <div style={containerStyle}>
-        <svg width="100%" height="100%" viewBox={transformStatus.viewBox}>
+    <div 
+        style={containerStyle}
+        onScroll={evt => console.log("SCROLL", evt)}
+        >
+        <svg 
+            width="100%" 
+            height="100%" 
+            viewBox={transformStatus.viewBox}>
             <MapContent
                 background={mapStatus.mapData.parts}
                 generation={mapStatus.snapshotGeneration}
@@ -36,18 +41,18 @@ export default observer(() => (
                         })
                     }
                 }}
-                onMouseOver={(partId, regionId, evt) => {
-                    // if(evt.buttons > 0 && toolsStatus.paintMode === 'swipe'){
-                    //     if(regionId === mapStatus.currentRegionId){
-                    //         mapStatus.deletePart(partId, regionId)
-                    //     }else{
-                    //         Modal.confirm({
-                    //             title: "正在编辑其他地区",
-                    //             content: "是否切换到该地区?",
-                    //             onOk: () => mapStatus.setCurrentRegionById(regionId)
-                    //         })
-                    //     }
-                    // }
+                onMouseOver={(partId, regionId) => {
+                    if(toolsStatus.paintMode === "erase"){
+                        if(regionId === mapStatus.currentRegionId){
+                            mapStatus.deletePart(partId, regionId)
+                        }else{
+                            Modal.confirm({
+                                title: "正在编辑其他地区",
+                                content: "是否切换到该地区?",
+                                onOk: () => mapStatus.setCurrentRegionById(regionId)
+                            })
+                        }
+                    }
                 }}
             />
         </svg>

@@ -40,7 +40,7 @@ interface RegionLayerProps {
     generation: number
     getPartById: (id: string) => MapDataPart
     onClick?: (partId: string, regionId: string) => void
-    onMouseOver?: (partId: string, regionId: string, evt: React.MouseEvent<SVGPathElement, MouseEvent>) => void
+    onMouseOver?: (partId: string, regionId: string) => void
 }
 
 export class RegionLayer extends Component<RegionLayerProps> {
@@ -61,7 +61,7 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             transform={part.transform || undefined}
                             strokeWidth={1}
                             onClick={() => onClick && onClick(part.id, reg.id)}
-                            onMouseOver={evt => onMouseOver && onMouseOver(part.id, reg.id, evt)}
+                            onMouseOver={evt => onMouseOver && evt.buttons>0 && onMouseOver(part.id, reg.id)}
                         />
                     ))}
                 </g>
