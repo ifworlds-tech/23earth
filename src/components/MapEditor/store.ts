@@ -288,9 +288,10 @@ class NewRegionStatus{
 
     @action setName(name: string){
         this.name = name
-        if(this.mode === 'create'){
-            this.id = name
-        }
+        this.id = name
+        // if(this.mode === 'create'){
+        //     this.id = name
+        // }
     }
 
     @action setDescription(desc: string){

@@ -28,7 +28,7 @@ interface CommitMeta {
     title: string
     author: string
     regionHash: string
-    date: number
+    time: number
 }
 
 const snapshotSchemaAsync = fs.promises.readFile("../schema/UploadSnapshot.json").then(data => {
@@ -65,13 +65,16 @@ app.post("/api/push", async (req, res) => {
         const hash = Crypto.createHmac('sha256', "S.H.I.T.")
             .update(regionData)
             .digest('hex');
-        await fs.promises.writeFile(Path.resolve(DataRegionPath, `${hash}.json`), regionData)
+        const regionPath = Path.resolve(DataRegionPath, `${hash}.json`)
+        if(!fs.existsSync(regionPath)){
+            await fs.promises.writeFile(regionPath, regionData)
+        }
         const time = moment()
         const meta: CommitMeta = {
             title: data.title,
             author: data.author,
             regionHash: hash,
-            date: time.toDate().getTime()
+            time: time.toDate().getTime()
         }
         await fs.promises.writeFile(Path.resolve(DataIndicesPath, `${dataIndicesCounter++}.json`), JSON.stringify(meta))
         res.send({message: '成功', code: 0})
@@ -99,13 +102,19 @@ app.get("/api/pull/:hash", async (req, res) => {
         })
     }
     const fp = Path.resolve(DataRegionPath, `${hash}.json`)
-    fs.exists(fp, exists => {
+    fs.exists(fp, async exists => {
         if(exists){
-            res.sendFile(fp)
+            const rawData = (await fs.promises.readFile(fp)).toString('utf-8')
+            res.send(`{
+                "code": "0",
+                "message": "成功",
+                "data": ${rawData}
+            }`)
         }else{
             res.json({
                 code: 3,
-                message: '内容不存在'
+                message: '内容不存在',
+                data: null
             })
         }
     })

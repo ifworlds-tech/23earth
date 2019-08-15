@@ -32,11 +32,21 @@ export async function showOnlineItems(){
     onlineListStatus.finish(res)
 }
 
+interface Result<T> {
+    code: number
+    message: string
+    data: T
+}
+
 export async function pullAndMerge(regionHash: string){
-    const res = await axios.get<RegionInfo[]>(`/api/pull/${regionHash}`).then(res => res.data)
-    mapStatus.mergeRegions(res)
-    notification.success({
-        type: 'success',
-        message: '成功合并'
-    })
+    const res = await axios.get<Result<RegionInfo[]>>(`/api/pull/${regionHash}`).then(res => res.data)
+    if(res.code == 0){
+        mapStatus.mergeRegions(res.data)
+        notification.success({
+            type: 'success',
+            message: '成功合并'
+        })
+    }else{
+        notification.error({message: res.message})
+    }
 }
