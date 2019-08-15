@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import 'antd/dist/antd.css';
 import zhCN from 'antd/es/locale/zh_CN';
