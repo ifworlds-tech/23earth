@@ -1,14 +1,13 @@
 import React, { CSSProperties } from 'react';
 import EditRegionDialog from './EditRegionDialog'
-import { Button, Select, Divider, Icon, Card, Dropdown, Menu, Row, Col, Popconfirm } from 'antd';
-import { newRegionStatus, mapStatus, uploadInfoStatus, transformStatus, onlineListStatus } from './store';
-import { RegionInfo } from '../../types/region';
+import { Button, Icon, Dropdown, Menu, Row, Col, Popconfirm } from 'antd';
+import { newRegionStatus, mapStatus, uploadInfoStatus, transformStatus } from './store';
 import { observer } from 'mobx-react-lite';
-import ButtonGroup from 'antd/lib/button/button-group';
 import { ColorBlock } from './utils';
-import { pushMap, showOnlineItems } from './actions/ajax';
+import { showOnlineItems } from './actions/ajax';
 import PushDialog from './PushDialog';
 import PullDialog from './PullDialog'
+import { exportCurrentMap } from './actions/export';
 
 const RegionSelect = observer(() => (
     <Dropdown 
@@ -89,6 +88,7 @@ export default () => (
         </Row>
         <Button onClick={() => uploadInfoStatus.show()}>上传</Button>
         <Button onClick={() => showOnlineItems()}>拉取</Button>
+        <Button onClick={exportCurrentMap}>导出</Button>
         <Popconfirm okType="danger" title="将清空所有本地地图数据, 且无法恢复, 确定要清空吗?" onConfirm={() => {
             mapStatus.reset()
             transformStatus.initStatus()

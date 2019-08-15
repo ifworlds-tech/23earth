@@ -25,18 +25,18 @@ interface RegionLayerProps {
     regions: RegionInfo[]
     generation: number
     getPartById: (id: string) => MapDataPart
-    onClick: (partId: string, regionId: string) => void
-    onMouseOver: (partId: string, regionId: string) => void
+    onClick?: (partId: string, regionId: string) => void
+    onMouseOver?: (partId: string, regionId: string) => void
 }
 
 export class RegionLayer extends Component<RegionLayerProps> {
     shouldComponentUpdate(nextProps: RegionLayerProps): boolean{
-        console.log(nextProps.generation, this.props.generation)
         return nextProps.generation == 0 || nextProps.generation !== this.props.generation
     }
     render(){
+        const {regions, onClick, onMouseOver} = this.props
         return (<g>
-            {this.props.regions.map(reg => (
+            {regions.map(reg => (
                 <g key={reg.id}>
                     {reg.parts.map(this.props.getPartById).map(part => (
                         <path
@@ -45,8 +45,8 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             fill={reg.color}
                             stroke="white"
                             strokeWidth={1}
-                            onClick={() => this.props.onClick(part.id, reg.id)}
-                            onMouseOver={() => this.props.onMouseOver(part.id, reg.id)}
+                            onClick={() => onClick && onClick(part.id, reg.id)}
+                            onMouseOver={() => onMouseOver && onMouseOver(part.id, reg.id)}
                         />
                     ))}
                 </g>
