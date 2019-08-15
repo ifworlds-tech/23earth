@@ -16,22 +16,12 @@ class MapStatus{
     @observable regions: RegionInfo[] = []
     @observable snapshotGeneration: number = 0
 
-
-    @computed get filledParts(): FilledPart[]{
-        return concat([], ...this.regions.map(reg => (
-            reg.parts.map(id => {
-                const target = this.mapDataIndex.get(id)
-                if(!target){
-                    throw new Error(`Invalid id: ${id}`)
-                }
-                return {
-                    id,
-                    path: target.path,
-                    color: reg.color,
-                    regionId: reg.id
-                }
-            })
-        )))
+    getPartById(id: string){
+        const target = this.mapDataIndex.get(id)
+        if(!target){
+            throw new Error(`Invalid part id: ${id}`)
+        }
+        return target
     }
 
     @computed get currentRegion(): null | RegionInfo{
