@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {Provider, observer} from 'mobx-react';
-import { mapStatus, newRegionStatus, transformStatus, uploadInfoStatus, onlineListStatus } from './store';
+import { mapStatus, newRegionStatus, transformStatus, uploadInfoStatus, onlineListStatus, toolsStatus } from './store';
 import MapBoard from './MapBoard'
 import { initializeMap } from './actions/init';
 import Panel from './Panel';
@@ -27,7 +27,8 @@ export default () => {
             newRegionStatus={newRegionStatus}
             transformStatus={transformStatus}
             uploadInfoStatus={uploadInfoStatus}
-            onlineListStatus={onlineListStatus}>
+            onlineListStatus={onlineListStatus}
+            toolsStatus={toolsStatus}>
             <MapEditor/>
         </Provider>
     )

@@ -358,8 +358,20 @@ class OnlineListStatus {
     }
 }
 
+
+class ToolsStatus {
+    @observable panelVisible = false
+    @action showPanel(){
+        this.panelVisible = true
+    }
+    @action hidePanel(){
+        this.panelVisible = false
+    }
+}
+
 export const mapStatus = new MapStatus()
 export const newRegionStatus = new NewRegionStatus()
 export const transformStatus = new TransformStatus()
 export const uploadInfoStatus = new UploadInfoStatus()
 export const onlineListStatus = new OnlineListStatus()
+export const toolsStatus = new ToolsStatus()

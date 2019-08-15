@@ -1,17 +1,25 @@
 import React, { CSSProperties } from 'react';
 import EditRegionDialog from './EditRegionDialog'
 import { Button, Icon, Dropdown, Menu, Row, Col, Popconfirm } from 'antd';
-import { newRegionStatus, mapStatus, uploadInfoStatus, transformStatus } from './store';
+import { newRegionStatus, mapStatus, uploadInfoStatus, transformStatus, toolsStatus } from './store';
 import { observer } from 'mobx-react-lite';
 import { ColorBlock } from './utils';
 import { showOnlineItems } from './actions/ajax';
 import PushDialog from './PushDialog';
 import PullDialog from './PullDialog'
 import { exportCurrentMap } from './actions/export';
+import ButtonGroup from 'antd/lib/button/button-group';
+import { ButtonProps } from 'antd/lib/button';
+
+const BtnProps: ButtonProps = {
+    ghost: false,
+    block: true
+}
 
 const RegionSelect = observer(() => (
+    <Col span={24}>
     <Dropdown 
-        placement="topLeft" overlay={
+        placement="bottomLeft" overlay={
             <Menu>
                 {mapStatus.regions.map(r => (
                     <Menu.Item 
@@ -28,7 +36,7 @@ const RegionSelect = observer(() => (
                 </Menu.Item>
             </Menu>
         }>
-        <Button style={{width: '100%'}}>
+        <Button {...BtnProps}>
             {
                 mapStatus.currentRegion ?
                 <span>
@@ -39,36 +47,66 @@ const RegionSelect = observer(() => (
             }
         </Button>
     </Dropdown>
+    </Col>
 ))
 
 const RegionTools = observer(() => (
-    mapStatus.currentRegionId ? (<Row gutter={10}>
-        <Col span={8}>
-            <Button
-                style={{width: '100%'}}
-                type="primary"
-                onClick={() => mapStatus.currentRegion && newRegionStatus.edit(mapStatus.currentRegion)}
-                >编辑</Button>
-        </Col>
-        <Col span={8}>
-            <Button style={{width: '100%'}} type="default" onClick={() => mapStatus.resetCurrentRegion()}>取消</Button>
-        </Col>
-        <Col span={8}>
-            <Popconfirm
-                title="该地区的所有信息都会丢失, 且不可恢复, 确定要删除吗?" 
-                okType="danger" 
-                onConfirm={() => mapStatus.currentRegionId && mapStatus.deleteRegion(mapStatus.currentRegionId)}>
-                <Button style={{width: '100%'}} type="danger">删除</Button>
-            </Popconfirm>
-        </Col>
-    </Row>) : null
+    mapStatus.currentRegionId ? (<ButtonGroup style={{width: '100%'}}>
+        <Row>
+            <Col span={8}>
+                <Button
+                    {...BtnProps}
+                    icon="edit"
+                    type="primary"
+                    onClick={() => mapStatus.currentRegion && newRegionStatus.edit(mapStatus.currentRegion)}
+                    >编辑</Button>
+            </Col>
+            <Col span={8}>
+                <Button {...BtnProps} type="default" icon="minus" onClick={() => mapStatus.resetCurrentRegion()}>取消</Button>
+            </Col>
+            <Col span={8}>
+                <Popconfirm
+                    title="该地区的所有信息都会丢失, 且不可恢复, 确定要删除吗?" 
+                    okType="danger" 
+                    icon="delete"
+                    onConfirm={() => mapStatus.currentRegionId && mapStatus.deleteRegion(mapStatus.currentRegionId)}>
+                    <Button {...BtnProps} type="danger">删除</Button>
+                </Popconfirm>
+            </Col>
+        </Row>
+    </ButtonGroup>) : null
 ))
 
-const style: CSSProperties = {
+const Tools = () => (
+    <ButtonGroup style={{width: '100%'}}>
+                    <Row>
+                        <Col span={6}>
+                            <Button {...BtnProps} icon="cloud-upload" onClick={() => uploadInfoStatus.show()}>上传</Button>
+                        </Col>
+                        <Col span={6}>
+                            <Button {...BtnProps} icon="cloud-download" onClick={() => showOnlineItems()}>拉取</Button>
+                        </Col>
+                        <Col span={6}>
+                            <Button {...BtnProps} icon="export"  onClick={exportCurrentMap}>导出</Button>
+                        </Col>
+                        <Col span={6}>
+                            <Popconfirm okType="danger" title="将清空所有本地地图数据, 且无法恢复, 确定要清空吗?" onConfirm={() => {
+                                mapStatus.reset()
+                                transformStatus.initStatus()
+                            }}>
+                                <Button {...BtnProps} type="danger" icon="delete">清空地图</Button>
+                            </Popconfirm>
+                        </Col>
+                    </Row>
+                </ButtonGroup>
+)
+
+const bodyStyle: CSSProperties = {
     position: 'fixed',
     left: '0.5rem',
-    bottom: '0.5rem',
+    top: '0.5rem',
     backgroundColor: 'white',
+    color: 'black',
     borderColor: 'black',
     borderWidth: '0.2rem',
     borderStyle: 'dashed',
@@ -76,27 +114,58 @@ const style: CSSProperties = {
     padding: '0.5rem'
 }
 
-export default () => (
-    <div style={style}>
+const MarginStyle: CSSProperties = {
+    marginTop: '0.2rem',
+    marginBottom: '0.2rem'
+}
+
+const PanelBody = observer(() => (
+    <div style={{...bodyStyle, display: toolsStatus.panelVisible ? 'block' : 'none'}}>
         <Row>
-            <Col span={24}>
+            <Col style={{textAlign: 'left'}}>
+                <Button shape="round" icon="close" size="large" type="dashed" style={{border: 'none'}} onClick={() => toolsStatus.hidePanel()}/>
+            </Col>
+        </Row>
+        <Row>
+            <Col span={24} style={MarginStyle}>
+                <Tools/>
+            </Col>
+            <Col span={24} style={MarginStyle}>
                 <RegionSelect/>
             </Col>
-            <Col span={24}>
+            <Col span={24} style={MarginStyle}>
                 <RegionTools/>
             </Col>
         </Row>
-        <Button onClick={() => uploadInfoStatus.show()}>上传</Button>
-        <Button onClick={() => showOnlineItems()}>拉取</Button>
-        <Button onClick={exportCurrentMap}>导出</Button>
-        <Popconfirm okType="danger" title="将清空所有本地地图数据, 且无法恢复, 确定要清空吗?" onConfirm={() => {
-            mapStatus.reset()
-            transformStatus.initStatus()
-        }}>
-            <Button type="danger">清空地图</Button>
-        </Popconfirm>
+
         <PushDialog/>
         <PullDialog/>
         <EditRegionDialog/>
+    </div>
+))
+
+const buttonStyle: CSSProperties = {
+    position: 'fixed',
+    top: '1rem',
+    left: '1rem',
+    backgroundColor: 'black',
+    color: 'white',
+    border: 'white 0.2rem solid'
+}
+
+const PanelButton = observer(() => (
+    <Button 
+        size="large" 
+        shape="round"
+        icon="tool"
+        style={{...buttonStyle, display: toolsStatus.panelVisible ? 'none' : 'block'}} 
+        onClick={() => toolsStatus.showPanel()}
+        />
+))
+
+export default () => (
+    <div>
+        <PanelButton/>
+        <PanelBody/>
     </div>
 )
