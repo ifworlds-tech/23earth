@@ -6,6 +6,7 @@ import { RegionInfo } from '../../types/region';
 
 interface BackgroundProps {
     background: MapDataPart[]
+    borderVisible?: boolean
 }
 
 export class Background extends Component<BackgroundProps>{
@@ -22,7 +23,7 @@ export class Background extends Component<BackgroundProps>{
                     fill="black"
                     transform={transform || undefined}
                     stroke="white"
-                    strokeWidth={0.5}
+                    strokeWidth={this.props.borderVisible ? 0.5 : 0}
                     onClick={() => mapStatus.addPart(id)}
                     onMouseOver={evt => {
                         if(evt.buttons > 0 && toolsStatus.paintMode === 'swipe'){
@@ -38,6 +39,7 @@ export class Background extends Component<BackgroundProps>{
 interface RegionLayerProps {
     regions: RegionInfo[]
     generation: number
+    borderVisible?: boolean
     getPartById: (id: string) => MapDataPart
     onClick?: (partId: string, regionId: string) => void
     onMouseOver?: (partId: string, regionId: string) => void
@@ -48,7 +50,7 @@ export class RegionLayer extends Component<RegionLayerProps> {
         return nextProps.generation == 0 || nextProps.generation !== this.props.generation
     }
     render(){
-        const {regions, onClick, onMouseOver} = this.props
+        const {regions, onClick, onMouseOver, borderVisible} = this.props
         return (<g>
             {regions.map(reg => (
                 <g key={reg.id}>
@@ -59,7 +61,7 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             fill={reg.color}
                             stroke="white"
                             transform={part.transform || undefined}
-                            strokeWidth={1}
+                            strokeWidth={borderVisible ? 0.5 : 0}
                             onClick={() => onClick && onClick(part.id, reg.id)}
                             onMouseOver={evt => onMouseOver && evt.buttons>0 && onMouseOver(part.id, reg.id)}
                         />
@@ -72,9 +74,9 @@ export class RegionLayer extends Component<RegionLayerProps> {
 
 type MapContentProps = BackgroundProps & RegionLayerProps
 
-export const MapContent = ({background, ...rest}: MapContentProps) => (
+export const MapContent = ({background, borderVisible, ...rest}: MapContentProps) => (
     <g>
-        <Background background={background}/>
-        <RegionLayer {...rest}/>
+        <Background background={background} borderVisible={borderVisible}/>
+        <RegionLayer borderVisible={borderVisible} {...rest}/>
     </g>
 )

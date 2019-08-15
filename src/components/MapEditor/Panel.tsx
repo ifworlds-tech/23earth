@@ -7,7 +7,7 @@ import { ColorBlock } from './utils';
 import { showOnlineItems } from './actions/ajax';
 import PushDialog from './PushDialog';
 import PullDialog from './PullDialog'
-import { exportCurrentMap } from './actions/export';
+import { exportCurrentMap, exportCurrentMapAsPng } from './actions/export';
 import ButtonGroup from 'antd/lib/button/button-group';
 import { ButtonProps } from 'antd/lib/button';
 
@@ -77,6 +77,17 @@ const RegionTools = observer(() => (
     </ButtonGroup>) : null
 ))
 
+const Export = () => (
+    <Dropdown overlay={
+        <Menu>
+            <Menu.Item onClick={exportCurrentMap}>SVG格式</Menu.Item>
+            <Menu.Item onClick={() => exportCurrentMapAsPng(1080)}>PNG格式(1080p)</Menu.Item>
+        </Menu>
+    }>
+        <Button {...BtnProps} icon="export">导出</Button>
+    </Dropdown>
+)
+
 const Tools = () => (
     <ButtonGroup style={{width: '100%'}}>
                     <Row>
@@ -87,7 +98,7 @@ const Tools = () => (
                             <Button {...BtnProps} icon="cloud-download" onClick={() => showOnlineItems()}>拉取</Button>
                         </Col>
                         <Col span={6}>
-                            <Button {...BtnProps} icon="export"  onClick={exportCurrentMap}>导出</Button>
+                            <Export/>
                         </Col>
                         <Col span={6}>
                             <Popconfirm okType="danger" title="将清空所有本地地图数据, 且无法恢复, 确定要清空吗?" onConfirm={() => {
