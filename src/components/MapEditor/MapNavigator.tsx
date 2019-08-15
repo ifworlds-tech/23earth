@@ -11,7 +11,7 @@ const style: CSSProperties = {
 }
 
 const NaviBtn = ({icon, onClick}: {icon: string, onClick: () => void}) => (
-    <Button shape="round" style={{backgroundColor: 'black', color: 'white', border: '2px white solid'}} icon={icon} onClick={onClick}/>
+    <Button shape="round" size="large" style={{backgroundColor: 'black', color: 'white', border: '2px white solid'}} icon={icon} onClick={onClick}/>
 )
 
 const RowGutter = 0

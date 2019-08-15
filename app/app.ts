@@ -47,6 +47,14 @@ app.get("/api/map", (req, res) => {
 const DataIndicesPath = "../data/indices"
 const DataRegionPath = "../data/regions"
 
+if(!fs.existsSync('../data')){
+    fs.mkdirSync('../data')
+    fs.mkdirSync(DataIndicesPath)
+    fs.mkdirSync(DataRegionPath)
+}
+
+let dataIndicesCounter = fs.readdirSync(DataIndicesPath).length
+
 app.post("/api/push", async (req, res) => {
     const schema = await snapshotSchemaAsync
     if(!ajv.validate(schema, req.body)){
@@ -65,19 +73,20 @@ app.post("/api/push", async (req, res) => {
             regionHash: hash,
             date: time.toDate().getTime()
         }
-        await fs.promises.writeFile(Path.resolve(DataIndicesPath, `${time.toDate().getTime()}.json`), JSON.stringify(meta))
+        await fs.promises.writeFile(Path.resolve(DataIndicesPath, `${dataIndicesCounter++}.json`), JSON.stringify(meta))
         res.send({message: '成功', code: 0})
     }
 })
 
 app.get("/api/list", async (req, res) => {
     const files = await fs.promises.readdir("../data/indices")
-    const data: CommitMeta[] = await Promise.all(sortBy(files.filter(x => x.endsWith(".json")), x => {
-        const [d, _] = x.split(".")
-        return -parseInt(d)
-    }).map(async fp =>
-        JSON.parse((await fs.promises.readFile(Path.resolve(DataIndicesPath, fp))).toString('utf-8'))
-    ))
+    const promise: Promise<CommitMeta>[] = []
+
+    for(let i=dataIndicesCounter-1; i>=0; i--){
+        promise.push(fs.promises.readFile(Path.resolve(DataIndicesPath, `${i}.json`)).then(buf => JSON.parse(buf.toString('utf-8'))))
+    }
+    
+    const data: CommitMeta[] = await Promise.all(promise)
     res.json(data)
 })
 
