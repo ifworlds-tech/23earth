@@ -3,8 +3,7 @@ import { mapStatus } from '../store';
 import { MapContent } from '../mapContent';
 import ReactDOMServer from 'react-dom/server';
 import moment from 'moment'
-import domToImg from 'dom-to-image'
-import { EEXIST } from 'constants';
+import html2canvas from 'html2canvas'
 
 export async function renderCurrentMap(scale: number = 1, borderVisible: boolean = false){
     const map = (
@@ -59,7 +58,8 @@ export async function exportCurrentMapAsPng(height: number){
     ele.style.height = `${height}px`
     ele.style.backgroundColor='white'
     document.body.appendChild(ele)
-    const data = await domToImg.toPng(ele)
+    const canvas = await html2canvas(ele)
+    const url = canvas.toDataURL('image/png')
     ele.remove()
-    downloadDataUrl(data, `23earth_${moment().format("YYYY-MM-DD_hh:mm:ss")}.png`)
+    downloadDataUrl(url, `23earth_${moment().format("YYYY-MM-DD_hh:mm:ss")}.png`)
 }
