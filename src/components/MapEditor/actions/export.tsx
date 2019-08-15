@@ -4,6 +4,7 @@ import { MapContent } from '../mapContent';
 import ReactDOMServer from 'react-dom/server';
 import moment from 'moment'
 import domToImg from 'dom-to-image'
+import { EEXIST } from 'constants';
 
 export async function renderCurrentMap(scale: number = 1, borderVisible: boolean = false){
     const map = (
@@ -48,11 +49,15 @@ export async function exportCurrentMap(){
 }
 
 export async function exportCurrentMapAsPng(height: number){
-    const svg = await renderCurrentMap(height / mapStatus.mapData.height, false)
+    const scale = height / mapStatus.mapData.height
+    const svg = await renderCurrentMap(scale, false)
     const ele = document.createElement("div")
     ele.innerHTML=svg
     ele.style.left = `${document.body.clientWidth}px`
     ele.style.top = `${document.body.clientHeight}px`
+    ele.style.width = `${mapStatus.mapData.width * scale}px`
+    ele.style.height = `${height}px`
+    ele.style.backgroundColor='white'
     document.body.appendChild(ele)
     const data = await domToImg.toPng(ele)
     ele.remove()
