@@ -16,9 +16,11 @@ async function readJsonData<T>(fp: string): Promise<T>{
 }
 
 async function initializeMapDataDir(mapId: string){
-    await fs.promises.mkdir(Path.resolve(DataDir, mapId))
-    await fs.promises.mkdir(Path.resolve(DataDir, mapId, 'commits'))
-    await fs.promises.mkdir(Path.resolve(DataDir, mapId, 'regions'))
+    if(!fs.existsSync(Path.resolve(DataDir, mapId))){
+        await fs.promises.mkdir(Path.resolve(DataDir, mapId))
+        await fs.promises.mkdir(Path.resolve(DataDir, mapId, 'commits'))
+        await fs.promises.mkdir(Path.resolve(DataDir, mapId, 'regions'))
+    }
 }
 
 export async function initializeDataDir(): Promise<DataDirStatus>{
@@ -29,9 +31,7 @@ export async function initializeDataDir(): Promise<DataDirStatus>{
     }
     const mapDataCounter: {[key: string]: number} = {}
     for(const idx of indices){
-        if(!fs.existsSync(Path.resolve(DataDir, idx.mapId))){
-            await initializeMapDataDir(idx.mapId)
-        }
+        await initializeMapDataDir(idx.mapId)
         mapDataCounter[idx.mapId] = (
             await fs.promises.readdir(
                 Path.resolve(DataDir, idx.mapId, 'commits')
