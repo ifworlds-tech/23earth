@@ -20,7 +20,7 @@ const RegionSelect = observer(() => (
     <Col span={24}>
     <Dropdown 
         overlayStyle={{
-            maxHeight: '80vh',
+            maxHeight: '60vh',
             overflowY: 'auto'
         }}
         placement="bottomLeft" overlay={

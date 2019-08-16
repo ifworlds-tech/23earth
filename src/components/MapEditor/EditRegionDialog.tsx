@@ -3,7 +3,7 @@ import { Modal, Row, Col, Input } from 'antd';
 import { newRegionStatus, mapStatus } from './store';
 import FormItem from 'antd/lib/form/FormItem';
 import TextArea from 'antd/lib/input/TextArea';
-import {SliderPicker} from 'react-color';
+import {SwatchesPicker} from 'react-color';
 import { observer } from 'mobx-react';
 
 function saveRegion(){
@@ -28,7 +28,7 @@ export default observer(() => (
                 </FormItem>
             </Col>
             <Col span={24}>
-                <SliderPicker color={newRegionStatus.color} onChange={color => newRegionStatus.setColor(color.hex)} />
+                <SwatchesPicker color={newRegionStatus.color} onChange={color => newRegionStatus.setColor(color.hex)} />
             </Col>
         </Row>
     </Modal>
