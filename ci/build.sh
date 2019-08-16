@@ -1,9 +1,7 @@
-if [ ! -e data ]; then
-    mkdir data
-    mkdir data/indices
-    mkdir data/regions
-fi
 react-scripts build
 cd app
+if [ -e ./build ]; then
+    rm -rf ./build
+fi
 ../node_modules/typescript/bin/tsc --outDir ./build --esModuleInterop app.ts
 cd ..

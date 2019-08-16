@@ -1,2 +1,2 @@
 cd /app/app
-node build/app.js
+node build/app/app.js
