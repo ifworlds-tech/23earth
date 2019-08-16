@@ -19,6 +19,10 @@ const BtnProps: ButtonProps = {
 const RegionSelect = observer(() => (
     <Col span={24}>
     <Dropdown 
+        overlayStyle={{
+            maxHeight: '80vh',
+            overflowY: 'auto'
+        }}
         placement="bottomLeft" overlay={
             <Menu>
                 {mapStatus.regions.map(r => (
