@@ -28,3 +28,15 @@ export interface OnlineItemMeta {
     time: number
     regionHash: string
 }
+
+export interface UploadMapData {
+    title: string
+    body: {
+        width: number;
+        height: number;
+        parts: {
+            id: string
+            path: string
+        }[]
+    }
+}

@@ -7,8 +7,8 @@ const SNAPSHOT_MAP_KEY = '23earth.snapshot.map'
 const SNAPSHOT_TRANSFORM_KEY = '23earth.snapshot.pos'
 const SNAPSHOT_UPLOAD_KEY = '23earth.snapshot.upload'
 
-export async function initializeMap(){
-    const dataMap = await loadMapData()
+export async function initializeMap(mapId: string){
+    const dataMap = await loadMapData(mapId)
     loadSnapshot(SNAPSHOT_MAP_KEY, mapStatus)
     transformStatus.setSize(
         dataMap.width, dataMap.height, 
@@ -18,8 +18,15 @@ export async function initializeMap(){
         transformStatus.initStatus()
     }
     loadSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
-    registerSnapshot(SNAPSHOT_MAP_KEY, mapStatus)
-    registerSnapshot(SNAPSHOT_TRANSFORM_KEY, transformStatus)
-    registerSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
-    initializeKeyboardEvents()
+    registerListener()
+}
+
+export function registerListener(){
+    if(!mapStatus.listenerRegistered){
+        registerSnapshot(SNAPSHOT_MAP_KEY, mapStatus)
+        registerSnapshot(SNAPSHOT_TRANSFORM_KEY, transformStatus)
+        registerSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
+        initializeKeyboardEvents()
+        mapStatus.finishRegisteringListener()
+    }
 }

@@ -16,3 +16,8 @@ export interface FilledPart {
     color: string
     regionId: string
 }
+
+export interface MapMeta {
+    title: string
+    mapId: string
+}

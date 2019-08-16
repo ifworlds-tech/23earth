@@ -5,7 +5,9 @@ import { MapData, MapDataPart } from '../../../types/map';
 import {find, union, concat} from 'lodash';
 
 class MapStatus{
+    @observable mapId: string = ""
     @observable loaded: boolean = false
+    @observable listenerRegistered: boolean = false
     @observable mapData: MapData = {
         width: 0,
         height: 0,
@@ -15,6 +17,15 @@ class MapStatus{
     @observable currentRegionId: string | null = null
     @observable regions: RegionInfo[] = []
     @observable snapshotGeneration: number = 0
+
+    @action setMapId(mapId: string){
+        this.mapId = mapId
+        this.loaded = false
+    }
+
+    @action finishRegisteringListener(){
+        this.listenerRegistered = true
+    }
 
     getPartById(id: string){
         const target = this.mapDataIndex.get(id)

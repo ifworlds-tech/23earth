@@ -1,4 +1,5 @@
 import { reaction } from 'mobx';
+import { mapStatus } from '../store';
 export interface Snapshotable<SnapShot> {
     importSnapshot(snap: SnapShot): void
     exportSnapshot(): SnapShot
@@ -6,19 +7,19 @@ export interface Snapshotable<SnapShot> {
 }
 
 export function registerSnapshot<SnapShot>(key: string, store: Snapshotable<SnapShot>){
-    reaction(() => store.snapshotGeneration, () => {
+    return reaction(() => store.snapshotGeneration, () => {
         saveSnapshot<SnapShot>(key, store)
     })
 }
 
 export function loadSnapshot<SnapShot>(key: string, store: Snapshotable<SnapShot>){
-    if(localStorage[key]){
-        const data = JSON.parse(localStorage[key]) as SnapShot
+    if(localStorage[key  + `.${mapStatus.mapId}`]){
+        const data = JSON.parse(localStorage[key  + `.${mapStatus.mapId}`]) as SnapShot
         store.importSnapshot(data)
     }
     return !!localStorage[key]
 }
 
 export function saveSnapshot<SnapShot>(key: string, store: Snapshotable<SnapShot>){
-    localStorage[key] = JSON.stringify(store.exportSnapshot())
+    localStorage[key + `.${mapStatus.mapId}`] = JSON.stringify(store.exportSnapshot())
 }

@@ -6,6 +6,7 @@ import { initializeMap } from './actions/init';
 import Panel from './Panel';
 import MapNavigator from './MapNavigator';
 import PaintTools from './PaintTools';
+import { RouteComponentProps } from 'react-router';
 
 const MapEditor = observer(() => (
     mapStatus.loaded ?
@@ -19,10 +20,10 @@ const MapEditor = observer(() => (
     )
 ))
 
-export default () => {
+export default (props: RouteComponentProps<{mapId: string}>) => {
     useEffect(() => {
-        initializeMap()
-    }, [])
+        initializeMap(props.match.params.mapId)
+    }, [props.match.params.mapId])
     return (
         <Provider 
             mapStatus={mapStatus}
