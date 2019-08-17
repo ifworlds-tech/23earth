@@ -4,6 +4,7 @@ import { mapStatus, transformStatus, toolsStatus } from './store';
 import { MapContent } from './mapContent';
 import { Modal } from 'antd';
 import { move } from './actions/move';
+import { ToolMenu } from './ToolMenu';
 
 
 const containerStyle: CSSProperties = {
@@ -64,6 +65,9 @@ const  SvgBody = observer(() => (
                     }
                 }
             }}
+            onMenu={(x, y) => {
+                mapStatus.currentRegionId && toolsStatus.showRegionMenu(mapStatus.currentRegionId, x, y)
+            }}
         />
     </svg>
 ))
@@ -83,6 +87,7 @@ export default () => {
             style={containerStyle}
         >
             <SvgBody/>
+            <ToolMenu/>
         </div>
     )
 }

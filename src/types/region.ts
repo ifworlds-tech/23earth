@@ -4,4 +4,11 @@ export interface RegionInfo {
     description: string
     color: string
     parts: string[]
+    cities?: CityInfo[]
+}
+
+export interface CityInfo {
+    name: string
+    x: number
+    y: number
 }

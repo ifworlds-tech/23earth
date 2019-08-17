@@ -46,6 +46,7 @@ interface RegionLayerProps {
     getPartById: (id: string) => MapDataPart
     onClick?: (partId: string, regionId: string) => void
     onMouseOver?: (partId: string, regionId: string) => void
+    onMenu?: (x: number, y: number) => void
 }
 
 export class RegionLayer extends Component<RegionLayerProps> {
@@ -53,7 +54,7 @@ export class RegionLayer extends Component<RegionLayerProps> {
         return nextProps.generation == 0 || nextProps.generation !== this.props.generation
     }
     render(){
-        const {regions, onClick, onMouseOver, borderVisible} = this.props
+        const {regions, onClick, onMouseOver, borderVisible, onMenu} = this.props
         return (<g>
             {regions.map(reg => (
                 <g key={reg.id}>
@@ -71,7 +72,9 @@ export class RegionLayer extends Component<RegionLayerProps> {
                                 }
                             }}
                             onContextMenu={evt => {
-                                console.log(evt)
+                                if(onMenu){
+                                    onMenu(evt.pageX, evt.pageY)
+                                }
                                 evt.preventDefault()
                             }}
                             onMouseOver={evt => onMouseOver && evt.buttons>0 && onMouseOver(part.id, reg.id)}
