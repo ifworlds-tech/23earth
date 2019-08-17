@@ -18,15 +18,20 @@ export async function initializeMap(mapId: string){
         transformStatus.initStatus()
     }
     loadSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
-    registerListener()
+    return registerListener()
 }
 
 export function registerListener(){
     if(!mapStatus.listenerRegistered){
-        registerSnapshot(SNAPSHOT_MAP_KEY, mapStatus)
-        registerSnapshot(SNAPSHOT_TRANSFORM_KEY, transformStatus)
-        registerSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
         initializeKeyboardEvents()
         mapStatus.finishRegisteringListener()
+    }
+    const reg1 = registerSnapshot(SNAPSHOT_MAP_KEY, mapStatus)
+    const reg2 = registerSnapshot(SNAPSHOT_TRANSFORM_KEY, transformStatus)
+    const reg3 = registerSnapshot(SNAPSHOT_UPLOAD_KEY, uploadInfoStatus)
+    return () => {
+        reg1()
+        reg2()
+        reg3()
     }
 }

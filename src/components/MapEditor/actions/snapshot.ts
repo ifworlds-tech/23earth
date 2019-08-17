@@ -16,8 +16,9 @@ export function loadSnapshot<SnapShot>(key: string, store: Snapshotable<SnapShot
     if(localStorage[key  + `.${mapStatus.mapId}`]){
         const data = JSON.parse(localStorage[key  + `.${mapStatus.mapId}`]) as SnapShot
         store.importSnapshot(data)
+        return true
     }
-    return !!localStorage[key]
+    return false
 }
 
 export function saveSnapshot<SnapShot>(key: string, store: Snapshotable<SnapShot>){

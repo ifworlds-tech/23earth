@@ -22,7 +22,8 @@ const MapEditor = observer(() => (
 
 export default (props: RouteComponentProps<{mapId: string}>) => {
     useEffect(() => {
-        initializeMap(props.match.params.mapId)
+        const reg = initializeMap(props.match.params.mapId)
+        return () => {reg.then(c => c())}
     }, [props.match.params.mapId])
     return (
         <Provider 

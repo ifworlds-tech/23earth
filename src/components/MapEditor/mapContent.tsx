@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { MapDataPart } from '../../types/map';
 import { mapStatus, toolsStatus } from './store';
 import { RegionInfo } from '../../types/region';
+import { transformStatus } from './store/index';
 
 
 interface BackgroundProps {
@@ -64,7 +65,15 @@ export class RegionLayer extends Component<RegionLayerProps> {
                             stroke="white"
                             transform={part.transform || undefined}
                             strokeWidth={borderVisible ? BorderWidth : 0}
-                            onClick={() => onClick && onClick(part.id, reg.id)}
+                            onClick={evt => {
+                                if(onClick){
+                                    onClick(part.id, reg.id)
+                                }
+                            }}
+                            onContextMenu={evt => {
+                                console.log(evt)
+                                evt.preventDefault()
+                            }}
                             onMouseOver={evt => onMouseOver && evt.buttons>0 && onMouseOver(part.id, reg.id)}
                         />
                     ))}
