@@ -33,15 +33,15 @@
     "react-dom": "^16.9.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.0",
+    "react-scripts": "^4.0.3",
     "ts-node": "^8.3.0",
     "ts-node-dev": "^1.0.0-pre.40",
     "typescript": "^3.5.3"
   },
   "proxy": "http://localhost:3001",
   "scripts": {
-    "start": "./node_modules/concurrently/bin/concurrently.js --kill-others 'react-scripts start' 'cd app && ../node_modules/ts-node-dev/bin/ts-node-dev --transpileOnly app.ts'",
-    "build": "sh ./ci/build.sh",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

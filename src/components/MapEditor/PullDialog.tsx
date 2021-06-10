@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { Modal, Spin, List, Button, Popconfirm } from 'antd';
 import { onlineListStatus } from './store';
 import { observer } from 'mobx-react-lite';

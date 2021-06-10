@@ -1,46 +1,71 @@
-import axios from 'axios';
-import { MapData } from '../../../types/map';
-import { mapStatus, onlineListStatus } from '../store';
-import { UploadSnapshot, OnlineItemMeta } from '../../../types/snapshot';
 import { notification } from 'antd';
-import { RegionInfo } from '../../../types/region';
+import { mapDataLoaders } from '../../../mapUtils';
+import { OnlineItemMeta, UploadSnapshot } from '../../../types/snapshot';
+import { mapStatus, onlineListStatus } from '../store';
 
 export async function loadMapData(mapId: string){
     mapStatus.setMapId(mapId)
-    const data = await axios.get<MapData>(`/api/map/data/${mapId}`).then(r => r.data)
+    const data = await mapDataLoaders[mapId]()
     mapStatus.setMapData(data)
     return data
 }
 
+export interface CommitListItem {
+    mid: string
+    cid: number
+}
+
+const LOCAL_COMMIT_LIST_PREFIX = 'ifworlds.map.local_commit_list.';
+const LOCAL_COMMIT_PREFIX = 'ifworlds.map.data.';
+
+function getLocalCommitList(mapId: string): CommitListItem[] {
+    const data = localStorage[LOCAL_COMMIT_LIST_PREFIX + mapId]
+    return data ? JSON.parse(data) : []
+}
+
+function appendLocalCommitList(newItem: CommitListItem) {
+    const data = getLocalCommitList(newItem.mid)
+    data.push(newItem)
+    localStorage[LOCAL_COMMIT_LIST_PREFIX + newItem.mid] = JSON.stringify(data)
+}
+
+function saveMapCommit(mapId: string, snap: UploadSnapshot): CommitListItem {
+    const cid = new Date().getTime()
+    const mid = mapId
+    localStorage[`${LOCAL_COMMIT_PREFIX}${cid}.${mid}`] = JSON.stringify(snap)
+    return {cid, mid}
+}
+
+function loadMapCommit({cid, mid}: CommitListItem): UploadSnapshot{
+    const data = JSON.parse(localStorage[`${LOCAL_COMMIT_PREFIX}${cid}.${mid}`])
+    return data
+}
 
 export async function pushMap(snap: UploadSnapshot){
-    const res = await axios.post<{code: number, message: string}>(`/api/commit/push/${mapStatus.mapId}`, snap)
-    const {code, message} = await res.data
-    if(code === 0){
-        notification.success({
-            message
-        })
-    }else{
-        notification.error({
-            message
-        })
-    }
+    const item = saveMapCommit(mapStatus.mapId, snap)
+    appendLocalCommitList(item)
+    notification.success({message: '已保存'})
 }
 
 export async function showOnlineItems(){
     onlineListStatus.start()
-    const res = await axios.get<OnlineItemMeta[]>(`/api/commit/list/${mapStatus.mapId}`).then(r => r.data)
+    const res = getLocalCommitList(mapStatus.mapId).map(item => {
+        const snap = loadMapCommit(item)
+        const data: OnlineItemMeta = {
+            title: snap.title,
+            author: snap.author,
+            time: item.cid,
+            regionHash: `${item.mid}:${item.cid}`
+        }
+        return data
+    })
     onlineListStatus.finish(res)
 }
 
-interface Result<T> {
-    code: number
-    message: string
-    data: T
-}
-
 export async function pullAndMerge(regionHash: string){
-    const res = await axios.get<RegionInfo[] | {code: number, message: string}>(`/api/commit/pull/${mapStatus.mapId}/${regionHash}`).then(res => res.data)
+    const [mid, cidS] = regionHash.split(":")
+    const cid = parseInt(cidS)
+    const res = loadMapCommit({cid, mid}).regions
     if(res instanceof Array){
         mapStatus.mergeRegions(res)
         notification.success({
@@ -48,6 +73,6 @@ export async function pullAndMerge(regionHash: string){
             message: '成功合并'
         })
     }else{
-        notification.error({message: res.message})
+        notification.error({message: "未知错误"})
     }
 }

@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import { mapStatus, transformStatus, toolsStatus } from './store';
 import { MapContent } from './mapContent';
 import { Modal } from 'antd';
-import { move } from './actions/move';
 import { ToolMenu } from './ToolMenu';
 
 
@@ -72,7 +71,7 @@ const  SvgBody = observer(() => (
     </svg>
 ))
 
-export default () => {
+const MapBoard = () => {
     useLayoutEffect(() => {
         const ele = document.querySelector('#mapSvgBody')
         if(ele){
@@ -91,3 +90,5 @@ export default () => {
         </div>
     )
 }
+
+export default MapBoard

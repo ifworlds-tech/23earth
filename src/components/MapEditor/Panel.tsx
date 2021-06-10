@@ -178,9 +178,11 @@ const PanelButton = observer(() => (
         />
 ))
 
-export default () => (
+const Panel = () => (
     <div>
         <PanelButton/>
         <PanelBody/>
     </div>
 )
+
+export default Panel

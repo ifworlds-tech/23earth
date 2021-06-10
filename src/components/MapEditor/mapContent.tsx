@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { MapDataPart } from '../../types/map';
-import { mapStatus, toolsStatus } from './store';
 import { RegionInfo } from '../../types/region';
-import { transformStatus } from './store/index';
+import { mapStatus, toolsStatus } from './store';
 
 
 interface BackgroundProps {
@@ -51,7 +50,7 @@ interface RegionLayerProps {
 
 export class RegionLayer extends Component<RegionLayerProps> {
     shouldComponentUpdate(nextProps: RegionLayerProps): boolean{
-        return nextProps.generation == 0 || nextProps.generation !== this.props.generation
+        return nextProps.generation === 0 || nextProps.generation !== this.props.generation
     }
     render(){
         const {regions, onClick, onMouseOver, borderVisible, onMenu} = this.props

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import './App.css';
+import { ConfigProvider } from 'antd';
 import 'antd/dist/antd.css';
 import zhCN from 'antd/es/locale/zh_CN';
-import MapEditor from './components/MapEditor';
-import { ConfigProvider } from 'antd';
+import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
+import './App.css';
+import MapEditor from './components/MapEditor';
 import MapList from './components/MapList';
 
 const App: React.FC = () => {

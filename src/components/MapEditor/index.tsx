@@ -20,7 +20,7 @@ const MapEditor = observer(() => (
     )
 ))
 
-export default (props: RouteComponentProps<{mapId: string}>) => {
+const IndexComp = (props: RouteComponentProps<{mapId: string}>) => {
     useEffect(() => {
         const reg = initializeMap(props.match.params.mapId)
         return () => {reg.then(c => c())}
@@ -37,3 +37,5 @@ export default (props: RouteComponentProps<{mapId: string}>) => {
         </Provider>
     )
 }
+
+export default IndexComp

@@ -1,6 +1,5 @@
 import React, { CSSProperties } from 'react';
 import { Row, Col, Button } from 'antd';
-import { transformStatus } from './store';
 import { zoomOut, zoomIn, move } from './actions/move';
 
 const style: CSSProperties = {
@@ -20,7 +19,7 @@ const BlockSize = 6
 //  U +
 // L R
 //  D -
-export default () => (
+const MapNavigator = () => (
     <div style={style}>
         <Row gutter={RowGutter}>
             <Col span={BlockSize}><NaviBtn icon="plus" onClick={zoomIn}/></Col>
@@ -36,3 +35,5 @@ export default () => (
         </Row>
     </div>
 )
+
+export default MapNavigator

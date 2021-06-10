@@ -3,7 +3,6 @@ import {Menu} from 'antd';
 import { observer } from 'mobx-react';
 import { toolsStatus } from './store/index';
 import { RegionContextMenuStatus } from '../../types/menu';
-import { MenuProps } from 'antd/lib/menu';
 
 interface ContextMenuProps {
     style: CSSProperties

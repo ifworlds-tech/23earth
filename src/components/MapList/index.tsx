@@ -27,7 +27,7 @@ const MapList = observer(() => (
         <h1>Loading...</h1>
 ))
 
-export default () => {
+const Index = () => {
     useEffect(() => {
         loadMapList()
     }, [])
@@ -37,3 +37,5 @@ export default () => {
         </Provider>
     )
 }
+
+export default Index

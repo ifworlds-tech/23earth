@@ -13,7 +13,7 @@ function saveRegion(){
 
 export default observer(() => (
     <Modal
-        visible={newRegionStatus.mode != 'disabled'}
+        visible={newRegionStatus.mode !== 'disabled'}
         onOk={saveRegion}
         onCancel={() => newRegionStatus.hide()}>
         <Row>
